@@ -48,15 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Novo Produto</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-<div class="container">
+<?php
+$titulo = 'Novo Produto';
+require __DIR__ . '/../templates/header.php';
+?>
     <header>
         <h1>Novo Produto</h1>
         <a href="index.php" class="btn">Voltar</a>
@@ -90,6 +85,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
-</div>
-</body>
-</html>
+<?php require __DIR__ . '/../templates/footer.php'; ?>
