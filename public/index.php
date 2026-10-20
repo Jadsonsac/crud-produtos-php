@@ -1,7 +1,7 @@
 <?php
 session_start();
-require __DIR__ . '/config/database.php';
-require __DIR__ . '/includes/functions.php';
+require __DIR__ . '/../config/database.php';
+require __DIR__ . '/../src/functions.php';
 
 $busca = trim($_GET['busca'] ?? '');
 $apenasBaixoEstoque = isset($_GET['baixo_estoque']);
@@ -34,7 +34,7 @@ $flash = mensagemFlash();
 <head>
     <meta charset="UTF-8">
     <title>CRUD de Produtos</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">

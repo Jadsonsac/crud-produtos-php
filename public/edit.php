@@ -1,7 +1,7 @@
 <?php
 session_start();
-require __DIR__ . '/config/database.php';
-require __DIR__ . '/includes/functions.php';
+require __DIR__ . '/../config/database.php';
+require __DIR__ . '/../src/functions.php';
 
 $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
 if ($id <= 0) {
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Editar Produto</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">

@@ -1,7 +1,7 @@
 <?php
 session_start();
-require __DIR__ . '/config/database.php';
-require __DIR__ . '/includes/functions.php';
+require __DIR__ . '/../config/database.php';
+require __DIR__ . '/../src/functions.php';
 
 $erros = [];
 $dados = ['nome' => '', 'categoria' => '', 'preco' => '', 'quantidade' => '', 'estoque_minimo' => '5'];
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Novo Produto</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">
