@@ -1,7 +1,7 @@
 <?php
 session_start();
-require __DIR__ . '/config/database.php';
-require __DIR__ . '/includes/functions.php';
+require __DIR__ . '/../config/database.php';
+require __DIR__ . '/../src/functions.php';
 
 $busca = trim($_GET['busca'] ?? '');
 $apenasBaixoEstoque = isset($_GET['baixo_estoque']);
@@ -29,15 +29,10 @@ $produtos = $stmt->fetchAll();
 $flash = mensagemFlash();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>CRUD de Produtos</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="container">
+<?php
+$titulo = 'CRUD de Produtos';
+require __DIR__ . '/../templates/header.php';
+?>
     <header>
         <h1>Controle de Produtos</h1>
         <a href="create.php" class="btn btn-primary">+ Novo produto</a>
@@ -101,6 +96,4 @@ $flash = mensagemFlash();
             </tbody>
         </table>
     <?php endif; ?>
-</div>
-</body>
-</html>
+<?php require __DIR__ . '/../templates/footer.php'; ?>

@@ -23,6 +23,7 @@ Aplicação web para controle simples de produtos e estoque, desenvolvida em **P
 - Exclusão realizada via requisição `POST`
 - Credenciais do banco mantidas em `.env`, fora do versionamento
 - Mensagens internas de erro do banco não são exibidas ao usuário
+- Apenas a pasta `public/` é exposta pelo servidor web
 
 ### Como testei cada proteção
 
@@ -33,6 +34,7 @@ Aplicação web para controle simples de produtos e estoque, desenvolvida em **P
 | Validação burlada | Remoção do `required` pelo DevTools e preço `abc` | Bloqueado pela validação no servidor |
 | Exclusão por GET | Acesso direto a `delete.php` | Resposta 405 (método não permitido) |
 | CSRF | Token alterado pelo DevTools | Solicitação recusada, nada excluído |
+| Acesso a arquivos sensíveis | Acesso a `/.env` pela URL | Arquivo fora da raiz pública, conteúdo não exibido |
 
 ## Tecnologias
 
@@ -48,21 +50,29 @@ Aplicação web para controle simples de produtos e estoque, desenvolvida em **P
 ```text
 crud-produtos-php/
 ├── config/
-│   └── database.php
+│   └── database.php        # conexão PDO (lê o .env)
+├── database/
+│   └── database.sql        # criação do banco e dados de exemplo
 ├── docs/
 │   └── screenshot.png
-├── includes/
-│   └── functions.php
+├── public/                 # única pasta acessível pelo navegador
+│   ├── css/
+│   │   └── style.css
+│   ├── create.php
+│   ├── delete.php
+│   ├── edit.php
+│   └── index.php
+├── src/
+│   └── functions.php       # funções auxiliares (escape, flash, CSRF)
+├── templates/
+│   ├── footer.php
+│   └── header.php
 ├── .env.example
 ├── .gitignore
-├── create.php
-├── database.sql
-├── delete.php
-├── edit.php
-├── index.php
-├── style.css
 └── README.md
 ```
+
+A pasta `public/` é a raiz do servidor web. Arquivos sensíveis, como o `.env` e as configurações, ficam fora dela e não podem ser acessados pela URL.
 
 ## Como executar
 
@@ -78,10 +88,10 @@ cd crud-produtos-php
 Com o MySQL em execução, importe o arquivo:
 
 ```bash
-mysql -u root -p < database.sql
+mysql -u root -p < database/database.sql
 ```
 
-Você também pode executar o conteúdo de `database.sql` pelo MySQL Workbench.
+Você também pode executar o conteúdo de `database/database.sql` pelo MySQL Workbench.
 
 ### 3. Configure as credenciais
 
@@ -105,10 +115,10 @@ DB_PASS=sua_senha
 ### 4. Inicie o servidor PHP
 
 ```bash
-php -S localhost:8000
+php -S localhost:8000 -t public
 ```
 
-Acesse `http://localhost:8000` no navegador.
+O parâmetro `-t public` define a pasta `public/` como raiz do servidor. Acesse `http://localhost:8000` no navegador.
 
 ## O que pratiquei neste projeto
 

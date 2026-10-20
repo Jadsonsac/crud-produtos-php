@@ -1,7 +1,7 @@
 <?php
 session_start();
-require __DIR__ . '/config/database.php';
-require __DIR__ . '/includes/functions.php';
+require __DIR__ . '/../config/database.php';
+require __DIR__ . '/../src/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
