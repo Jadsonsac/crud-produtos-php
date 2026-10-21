@@ -96,3 +96,13 @@ th { color: #6b7280; font-weight: 600; font-size: 0.8rem; text-transform: upperc
     display: inline;
     margin: 0;
 }
+
+.paginacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+}

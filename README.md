@@ -10,6 +10,7 @@ Aplicação web para controle simples de produtos e estoque, desenvolvida em **P
 - Listagem de produtos
 - Edição e exclusão de produtos
 - Busca por nome ou categoria
+- Paginação da listagem (10 produtos por página), mantendo a busca e os filtros
 - Filtro de produtos com estoque baixo
 - Indicador visual de estoque baixo
 - Mensagens de sucesso e erro usando sessão
@@ -126,7 +127,6 @@ Este projeto me permitiu praticar PHP sem framework, conexão com banco usando P
 
 ## Melhorias futuras
 
-- Paginação da listagem
 - Upload de imagem dos produtos
 - Histórico de entrada e saída do estoque
 - Autenticação de usuários

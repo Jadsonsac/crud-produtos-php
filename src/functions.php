@@ -84,3 +84,14 @@ function validarProduto(array $entrada): array
 
     return [$dados, $erros];
 }
+
+/**
+ * Monta o link para outra página da listagem, mantendo a busca e os filtros atuais.
+ */
+function urlPagina(int $pagina): string
+{
+    $parametros = $_GET;
+    $parametros['pagina'] = $pagina;
+
+    return 'index.php?' . http_build_query($parametros);
+}
