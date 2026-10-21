@@ -6,24 +6,38 @@ require __DIR__ . '/../src/functions.php';
 $busca = trim($_GET['busca'] ?? '');
 $apenasBaixoEstoque = isset($_GET['baixo_estoque']);
 
-$sql = 'SELECT * FROM produtos WHERE 1=1';
+$porPagina = 10;
+$pagina = max(1, (int) ($_GET['pagina'] ?? 1));
+
+$where = ' WHERE 1=1';
 $params = [];
 
 if ($busca !== '') {
-    $sql .= ' AND (nome LIKE :busca_nome OR categoria LIKE :busca_categoria)';
+    $where .= ' AND (nome LIKE :busca_nome OR categoria LIKE :busca_categoria)';
 
     $params[':busca_nome'] = "%{$busca}%";
     $params[':busca_categoria'] = "%{$busca}%";
 }
 
 if ($apenasBaixoEstoque) {
-    $sql .= ' AND quantidade <= estoque_minimo';
+    $where .= ' AND quantidade <= estoque_minimo';
 }
 
-$sql .= ' ORDER BY nome ASC';
-
-$stmt = $pdo->prepare($sql);
+$stmt = $pdo->prepare('SELECT COUNT(*) FROM produtos' . $where);
 $stmt->execute($params);
+$totalProdutos = (int) $stmt->fetchColumn();
+
+$totalPaginas = max(1, (int) ceil($totalProdutos / $porPagina));
+$pagina = min($pagina, $totalPaginas);
+$deslocamento = ($pagina - 1) * $porPagina;
+
+$stmt = $pdo->prepare('SELECT * FROM produtos' . $where . ' ORDER BY nome ASC LIMIT :limite OFFSET :deslocamento');
+foreach ($params as $nome => $valor) {
+    $stmt->bindValue($nome, $valor);
+}
+$stmt->bindValue(':limite', $porPagina, PDO::PARAM_INT);
+$stmt->bindValue(':deslocamento', $deslocamento, PDO::PARAM_INT);
+$stmt->execute();
 $produtos = $stmt->fetchAll();
 
 $flash = mensagemFlash();
@@ -95,5 +109,17 @@ require __DIR__ . '/../templates/header.php';
             <?php endforeach; ?>
             </tbody>
         </table>
+
+        <?php if ($totalPaginas > 1): ?>
+            <nav class="paginacao" aria-label="Paginação">
+                <?php if ($pagina > 1): ?>
+                    <a href="<?= h(urlPagina($pagina - 1)) ?>" class="btn btn-sm">&larr; Anterior</a>
+                <?php endif; ?>
+                <span>Página <?= $pagina ?> de <?= $totalPaginas ?> &middot; <?= $totalProdutos ?> produtos</span>
+                <?php if ($pagina < $totalPaginas): ?>
+                    <a href="<?= h(urlPagina($pagina + 1)) ?>" class="btn btn-sm">Próxima &rarr;</a>
+                <?php endif; ?>
+            </nav>
+        <?php endif; ?>
     <?php endif; ?>
 <?php require __DIR__ . '/../templates/footer.php'; ?>
