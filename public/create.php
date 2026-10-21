@@ -7,27 +7,7 @@ $erros = [];
 $dados = ['nome' => '', 'categoria' => '', 'preco' => '', 'quantidade' => '', 'estoque_minimo' => '5'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $dados['nome'] = trim($_POST['nome'] ?? '');
-    $dados['categoria'] = trim($_POST['categoria'] ?? '');
-    $dados['preco'] = str_replace(',', '.', trim($_POST['preco'] ?? ''));
-    $dados['quantidade'] = trim($_POST['quantidade'] ?? '');
-    $dados['estoque_minimo'] = trim($_POST['estoque_minimo'] ?? '5');
-
-    if ($dados['nome'] === '') {
-        $erros[] = 'O nome do produto é obrigatório.';
-    }
-    if ($dados['categoria'] === '') {
-        $erros[] = 'A categoria é obrigatória.';
-    }
-    if (!is_numeric($dados['preco']) || (float) $dados['preco'] < 0) {
-        $erros[] = 'Informe um preço válido.';
-    }
-    if (!ctype_digit((string) $dados['quantidade']) || (int) $dados['quantidade'] < 0) {
-        $erros[] = 'Informe uma quantidade válida (número inteiro maior ou igual a zero).';
-    }
-    if (!ctype_digit((string) $dados['estoque_minimo']) || (int) $dados['estoque_minimo'] < 0) {
-        $erros[] = 'Informe um estoque mínimo válido.';
-    }
+    [$dados, $erros] = validarProduto($_POST);
 
     if (empty($erros)) {
         $stmt = $pdo->prepare(

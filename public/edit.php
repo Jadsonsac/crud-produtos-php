@@ -21,27 +21,8 @@ if (!$produto) {
 $erros = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $produto['nome'] = trim($_POST['nome'] ?? '');
-    $produto['categoria'] = trim($_POST['categoria'] ?? '');
-    $produto['preco'] = str_replace(',', '.', trim($_POST['preco'] ?? ''));
-    $produto['quantidade'] = trim($_POST['quantidade'] ?? '');
-    $produto['estoque_minimo'] = trim($_POST['estoque_minimo'] ?? '');
-
-    if ($produto['nome'] === '') {
-        $erros[] = 'O nome do produto é obrigatório.';
-    }
-    if ($produto['categoria'] === '') {
-        $erros[] = 'A categoria é obrigatória.';
-    }
-    if (!is_numeric($produto['preco']) || (float) $produto['preco'] < 0) {
-        $erros[] = 'Informe um preço válido.';
-    }
-    if (!ctype_digit((string) $produto['quantidade']) || (int) $produto['quantidade'] < 0) {
-        $erros[] = 'Informe uma quantidade válida.';
-    }
-    if (!ctype_digit((string) $produto['estoque_minimo']) || (int) $produto['estoque_minimo'] < 0) {
-        $erros[] = 'Informe um estoque mínimo válido.';
-    }
+    [$dados, $erros] = validarProduto($_POST);
+    $produto = array_merge($produto, $dados);
 
     if (empty($erros)) {
         $stmt = $pdo->prepare(
@@ -96,10 +77,10 @@ require __DIR__ . '/../templates/header.php';
         <input type="text" id="preco" name="preco" value="<?= h((string) $produto['preco']) ?>" required>
 
         <label for="quantidade">Quantidade em estoque *</label>
-        <input type="number" id="quantidade" name="quantidade" value="<?= (int) $produto['quantidade'] ?>" min="0" required>
+        <input type="number" id="quantidade" name="quantidade" value="<?= h((string) $produto['quantidade']) ?>" min="0" required>
 
         <label for="estoque_minimo">Estoque mínimo</label>
-        <input type="number" id="estoque_minimo" name="estoque_minimo" value="<?= (int) $produto['estoque_minimo'] ?>" min="0">
+        <input type="number" id="estoque_minimo" name="estoque_minimo" value="<?= h((string) $produto['estoque_minimo']) ?>" min="0">
 
         <button type="submit" class="btn btn-primary">Atualizar</button>
     </form>

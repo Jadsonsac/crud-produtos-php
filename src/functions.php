@@ -49,3 +49,38 @@ function csrfValido(?string $token): bool
         && isset($_SESSION['csrf_token'])
         && hash_equals($_SESSION['csrf_token'], $token);
 }
+
+/**
+ * Lê os dados do formulário de produto, normaliza e valida.
+ * Retorna um array com dois itens: os dados limpos e a lista de erros.
+ */
+function validarProduto(array $entrada): array
+{
+    $dados = [
+        'nome' => trim($entrada['nome'] ?? ''),
+        'categoria' => trim($entrada['categoria'] ?? ''),
+        'preco' => str_replace(',', '.', trim($entrada['preco'] ?? '')),
+        'quantidade' => trim($entrada['quantidade'] ?? ''),
+        'estoque_minimo' => trim($entrada['estoque_minimo'] ?? '5'),
+    ];
+
+    $erros = [];
+
+    if ($dados['nome'] === '') {
+        $erros[] = 'O nome do produto é obrigatório.';
+    }
+    if ($dados['categoria'] === '') {
+        $erros[] = 'A categoria é obrigatória.';
+    }
+    if (!is_numeric($dados['preco']) || (float) $dados['preco'] < 0) {
+        $erros[] = 'Informe um preço válido.';
+    }
+    if (!ctype_digit($dados['quantidade'])) {
+        $erros[] = 'Informe uma quantidade válida (número inteiro maior ou igual a zero).';
+    }
+    if (!ctype_digit($dados['estoque_minimo'])) {
+        $erros[] = 'Informe um estoque mínimo válido.';
+    }
+
+    return [$dados, $erros];
+}
